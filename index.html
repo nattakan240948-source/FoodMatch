@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoodMatch | ระบบแนะนำเมนูอาหาร</title>
+<style>
+:root{--bg:#07100c;--panel:#111b16;--panel2:#1a2720;--line:#2a3b31;--green:#25c878;--text:#f5f8f5;--muted:#aab9af}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Segoe UI",sans-serif}
+a{color:inherit}.wrap{max-width:1200px;margin:auto;padding:22px 18px 55px}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.brand{font-size:1.35rem;font-weight:850}.brand span{color:var(--green)}nav{display:flex;gap:18px;color:var(--muted);font-size:.94rem}
+.hero{display:grid;grid-template-columns:1fr .85fr;gap:28px;align-items:center;margin-bottom:24px}
+.eyebrow{display:inline-block;background:#123c28;color:#72efad;border-radius:999px;padding:7px 13px;font-size:.85rem}
+h1{font-size:clamp(2.2rem,5vw,4rem);line-height:1.12;margin:15px 0}
+.accent{color:var(--green)}p{line-height:1.65}.muted{color:var(--muted)}
+.hero-img{width:100%;height:340px;object-fit:cover;border-radius:24px;border:1px solid var(--line)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:22px;margin:22px 0}
+h2{font-size:1.45rem;margin:0 0 7px}.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+label{display:block;font-weight:650;margin-bottom:8px}input,select{width:100%;padding:13px;border:1px solid #405248;border-radius:12px;background:#08110c;color:var(--text);font:inherit}
+button{border:0;border-radius:13px;background:var(--green);color:#062112;font:inherit;font-weight:800;padding:14px 18px;cursor:pointer}
+.submit{width:100%;margin-top:16px}.results,.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:17px}
+.results{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;overflow:hidden;min-width:0}
+.card img{width:100%;height:180px;object-fit:cover;display:block;background:var(--panel2)}
+.card-body{padding:13px}.card h3{font-size:1rem;margin:0 0 5px}.tag{display:inline-block;color:#7af0b0;background:#123c28;border-radius:999px;padding:4px 9px;font-size:.78rem;margin-bottom:8px}
+.meta{font-size:.86rem;color:var(--muted);margin-top:8px}.score{font-size:1.3rem;font-weight:850;color:var(--green);margin-top:7px}
+.searchrow{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;margin:16px 0}
+.note{background:#211e13;border-left:3px solid #d9a441;padding:12px 14px;border-radius:8px;color:#e4ddca;font-size:.9rem}
+footer{text-align:center;color:var(--muted);margin-top:30px;font-size:.9rem}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.hero-img{height:250px}.filters{grid-template-columns:1fr 1fr}.gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.wrap{padding:16px 12px 40px}nav{display:none}.filters,.results{grid-template-columns:1fr}.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:150px}.hero-img{height:220px}}
+</style>
+</head>
+<body><div class="wrap">
+<header><div class="brand">🍴 Food<span>Match</span></div><nav><a href="#top">หน้าหลัก</a><a href="#menu">เมนูทั้งหมด</a><a href="#about">เกี่ยวกับโครงการ</a></nav></header>
+<section class="hero" id="top">
+<div><span class="eyebrow">SMART FOOD RECOMMENDATION</span><h1>วันนี้กินอะไรดี?<br>ให้ <span class="accent">FoodMatch</span> ช่วยเลือก</h1>
+<p class="muted">เลือกงบประมาณ ประเภทอาหาร และความอยากกิน ระบบจะคำนวณคะแนนและแนะนำเมนูที่เหมาะสม 3 อันดับแรก</p>
+<p class="muted">ต้นแบบระบบสนับสนุนการตัดสินใจด้วย Weighted Scoring Model</p></div>
+<img class="hero-img" src="{{ url_for('static', filename='images/01_food.jpg') }}" alt="ภาพอาหารเมนูแนะนำ">
+</section>
+<section class="panel"><h2>🍽️ ลองแมตช์เมนูอาหาร</h2><p class="muted">เลือกความต้องการ แล้วกดปุ่มเพื่อดูผลการแนะนำ</p>
+<form method="post"><div class="filters">
+<div><label for="budget">งบประมาณต่อมื้อ</label><select id="budget" name="budget">
+<option value="40" {% if budget == 40 %}selected{% endif %}>40 บาท</option><option value="60" {% if budget == 60 %}selected{% endif %}>60 บาท</option><option value="80" {% if budget == 80 %}selected{% endif %}>80 บาท</option><option value="100" {% if budget == 100 %}selected{% endif %}>100 บาท</option></select></div>
+<div><label for="mood">วันนี้อยากกินแบบไหน?</label><select id="mood" name="mood"><option value="spicy" {% if mood == 'spicy' %}selected{% endif %}>เผ็ด ๆ จัดจ้าน</option><option value="mild" {% if mood == 'mild' %}selected{% endif %}>รสอ่อน ไม่เผ็ด</option><option value="any" {% if mood == 'any' %}selected{% endif %}>กินอะไรก็ได้</option></select></div>
+<div><label for="category">ประเภทอาหาร</label><select id="category" name="category"><option value="all" {% if category == 'all' %}selected{% endif %}>อะไรก็ได้</option>{% for cat in menu|map(attribute='category')|unique %}<option value="{{cat}}" {% if category == cat %}selected{% endif %}>{{cat}}</option>{% endfor %}</select></div>
+<div><label for="query">ค้นหาเมนู (ถ้าต้องการ)</label><input id="query" name="query" value="{{query}}" placeholder="เช่น กะเพรา, pad thai"></div>
+</div><button class="submit" type="submit">แมตช์อาหารให้ฉัน →</button></form></section>
+{% if results %}<section><h2>✨ เมนูแนะนำ 3 อันดับแรก</h2><p class="muted">ผลลัพธ์จากคะแนนถ่วงน้ำหนักตามตัวเลือกของคุณ</p><div class="results">
+{% for dish in results %}<article class="card"><img src="{{ url_for('static', filename='images/' + dish.image) }}" alt="{{dish.name}}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/01_food.jpg') }}';"><div class="card-body"><span class="tag">อันดับ {{loop.index}}</span><h3>{{dish.name}}</h3><div class="muted">{{dish.category}} · {{dish.price}} บาท</div><div class="meta">🌶️ เผ็ด {{dish.spicy}}/5 · ⭐ รสชาติ {{dish.taste}}/5</div><div class="score">{{dish.score}} คะแนน</div></div></article>{% endfor %}
+</div></section>{% endif %}
+<section class="panel" id="menu"><h2>🍛 เมนูทั้งหมดในระบบ (50 เมนู)</h2><p class="muted">ค้นหาและดูภาพประกอบของเมนูทั้งหมดได้ที่นี่</p>
+<div class="gallery">{% for dish in menu %}<article class="card"><img src="{{ url_for('static', filename='images/' + dish.image) }}" alt="{{dish.name}}" loading="lazy"><div class="card-body"><h3>{{dish.name}}</h3><div class="muted">{{dish.name_en}}</div><div class="meta">{{dish.price}} บาท · {{dish.category}}</div></div></article>{% endfor %}</div>
+</section>
+<div class="note" id="about">หมายเหตุ: ราคา คะแนนรสชาติ และระดับความเผ็ดเป็นข้อมูลจำลองเพื่อทดสอบระบบ ไม่ใช่ผลสำรวจจริง ภาพอาหารเป็นภาพประกอบที่สร้างขึ้นสำหรับต้นแบบเว็บไซต์ โปรดเก็บข้อมูลจริงก่อนใช้อ้างอิงในงานวิจัย</div>
+<footer>FoodMatch · Decision Support System Prototype · 50 เมนู</footer>
+</div></body></html>
